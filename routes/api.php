@@ -24,3 +24,5 @@ Route::post('/feedbacks', [FeedbackController::class, 'save']);
 Route::get('/export-feedback', [FeedbackController::class, 'export']);
 
 Route::get('/questions/{case}', [QuestionController::class, 'index']);
+Route::post('/save-response', [QuestionController::class, 'response']);
+Route::get('/get-graph-data/{question}', [QuestionController::class, 'getGraphData']);
