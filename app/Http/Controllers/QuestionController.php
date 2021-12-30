@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\QuestionExport;
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Models\Response;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuestionController extends Controller
 {
@@ -65,5 +68,10 @@ class QuestionController extends Controller
             Log::error($e->getMessage());
             return false;
         }
+    }
+
+    public function export(User $user)
+    {
+        return Excel::download(new QuestionExport($user->id), 'Question.xlsx');
     }
 }
