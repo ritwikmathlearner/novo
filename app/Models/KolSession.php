@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Response extends Model
+class KolSession extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['attendee_id', 'question_id', 'answer_id', 'kol_session_id'];
+    protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }   
 }

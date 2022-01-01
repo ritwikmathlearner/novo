@@ -21,9 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/feedbacks', [FeedbackController::class, 'save']);
-Route::get('/export-feedback', [FeedbackController::class, 'export']);
+Route::get('/export-feedback/{kol_session}', [FeedbackController::class, 'export']);
 
 Route::get('/questions/{case}', [QuestionController::class, 'index']);
 Route::post('/save-response', [QuestionController::class, 'response']);
 Route::get('/get-graph-data/{question}', [QuestionController::class, 'getGraphData']);
-Route::get('/export-question/{user}', [QuestionController::class, 'export']);
+Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::class, 'export']);

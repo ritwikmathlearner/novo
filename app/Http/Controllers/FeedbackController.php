@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Exports\FeedbackExport;
 use App\Models\Feedback;
+use App\Models\KolSession;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,26 +19,29 @@ class FeedbackController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'user_id' => 'required|exists:users,id',
-                'feedback' => 'required|string|min:3'
+                'kol_session_id' => 'required|exists:kol_sessions,id',
+                'attendee_id' => 'required|exists:attendees,id',
+                'feedback' => 'required|int|min:1|max:5'
             ]);
 
-            if($validator->fails()) return false;
+            if($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
 
             $feedback = Feedback::create([
-                'user_id' => $request->user_id,
+                'kol_session_id' => $request->kol_session_id,
+                'attendee_id' => $request->attendee_id,
                 'feedback' => $request->feedback
             ]);
 
-            if(!empty($feedback)) return true;
+            if(!empty($feedback)) return response('Feedback stored', 200);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return false;
+            return response($e->getMessage(), 500);
         }
     }
 
-    public function export()
+    public function export(KolSession $kolSession)
     {
-        return Excel::download(new FeedbackExport, 'Feedbacks.xlsx');
+        $fileName = $kolSession->session_name. '-' . Carbon::parse($kolSession->start_date_time)->format('d-m-Y') .'-Feedbacks.xlsx';
+        return Excel::download(new FeedbackExport($kolSession->id), $fileName);
     }
 }

@@ -9,5 +9,5 @@ class Feedback extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'feedback'];
+    protected $fillable = ['kol_session_id', 'attendee_id', 'feedback'];
 }

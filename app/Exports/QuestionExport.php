@@ -12,11 +12,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class QuestionExport implements FromCollection,WithHeadings,WithEvents,WithStyles
 {
-    protected $user_id;
+    protected $attendee_id;
+    protected $kol_session_id;
 
-    public function __construct($user_id)
+    public function __construct($attendee_id, $kol_session_id)
     {
-        $this->user_id = $user_id;
+        $this->attendee_id = $attendee_id;
+        $this->kol_session_id = $kol_session_id;
     }
     /**
     * @return \Illuminate\Support\Collection
@@ -25,10 +27,11 @@ class QuestionExport implements FromCollection,WithHeadings,WithEvents,WithStyle
     {
         $data = DB::table('responses')
         ->select('name', 'question', 'answer')
-        ->join('users', 'users.id', 'responses.user_id')
+        ->join('attendees', 'attendees.id', 'responses.attendee_id')
         ->join('questions', 'questions.id', 'responses.question_id')
         ->join('answers', 'answers.id', 'responses.answer_id')
-        ->where('responses.user_id', $this->user_id)
+        ->where('responses.attendee_id', $this->attendee_id)
+        ->where('responses.kol_session_id', $this->kol_session_id)
         ->get();
 
         return $data;
@@ -44,8 +47,8 @@ class QuestionExport implements FromCollection,WithHeadings,WithEvents,WithStyle
         return [
             AfterSheet::class => function(AfterSheet $event) {
                 $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(40);
-                $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(40);
-                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(100);
+                $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(60);
+                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(60);
             },
         ];
     }

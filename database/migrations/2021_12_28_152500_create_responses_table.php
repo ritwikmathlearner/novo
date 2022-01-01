@@ -15,14 +15,16 @@ class CreateResponsesTable extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('attendee_id');
             $table->unsignedBigInteger('question_id');
             $table->unsignedBigInteger('answer_id');
+            $table->unsignedBigInteger('kol_session_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('attendee_id')->references('id')->on('attendees');
             $table->foreign('question_id')->references('id')->on('questions');
             $table->foreign('answer_id')->references('id')->on('answers');
+            $table->foreign('kol_session_id')->references('id')->on('kol_sessions');
         });
     }
 

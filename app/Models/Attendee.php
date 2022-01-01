@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Response extends Model
+class Attendee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['attendee_id', 'question_id', 'answer_id', 'kol_session_id'];
+    protected $fillable = ['name', 'phone'];
 }

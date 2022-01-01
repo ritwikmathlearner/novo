@@ -15,11 +15,13 @@ class CreateFeedbackTable extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->text('feedback');
+            $table->unsignedBigInteger('kol_session_id');
+            $table->unsignedBigInteger('attendee_id');
+            $table->integer('feedback');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('attendee_id')->references('id')->on('attendees');
+            $table->foreign('kol_session_id')->references('id')->on('kol_sessions');
         });
     }
 

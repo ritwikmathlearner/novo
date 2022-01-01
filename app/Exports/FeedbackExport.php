@@ -12,13 +12,21 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FeedbackExport implements FromCollection,WithHeadings,WithEvents,WithStyles
 {
+    protected $kol_session_id;
+
+    public function __construct($kol_session_id)
+    {
+        $this->kol_session_id = $kol_session_id;
+    }
+
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        $feedbacks = Feedback::select('name', 'email', 'feedback')
-        ->join('users', 'feedback.user_id', '=', 'users.id')
+        $feedbacks = Feedback::select('name', 'phone', 'feedback')
+        ->join('attendees', 'feedback.attendee_id', '=', 'attendees.id')
+        ->where('feedback.kol_session_id', $this->kol_session_id)
         ->get();
 
         return $feedbacks;
@@ -26,7 +34,7 @@ class FeedbackExport implements FromCollection,WithHeadings,WithEvents,WithStyle
 
     public function headings(): array
     {
-        return ['Attendee Name', 'Attendee Email', 'Attendee Feedback'];
+        return ['Attendee Name', 'Attendee Phone', 'Feedback (Out of 5)'];
     }
 
     public function registerEvents(): array
@@ -35,7 +43,7 @@ class FeedbackExport implements FromCollection,WithHeadings,WithEvents,WithStyle
             AfterSheet::class => function(AfterSheet $event) {
                 $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(40);
                 $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(40);
-                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(100);
+                $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(40);
             },
         ];
     }
