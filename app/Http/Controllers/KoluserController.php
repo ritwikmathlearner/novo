@@ -28,8 +28,8 @@ class KoluserController extends Controller
             /* 
              * 1    Success  
              * 10   Wrong code
-             * 11   Yet to start
-             * 12   Session closed
+             * 11   Session closed
+             * 12   Yet to start
             */
             $ResposeData = [
                     'status' => 0,
@@ -60,24 +60,23 @@ class KoluserController extends Controller
             else{
                 unset($kol_sessions_data->session_ended_by);
                 $ResposeData['data'] = json_decode(json_encode($kol_sessions_data), true);
-
+                $ResposeData['data']['currentTime'] = date('Y-m-d H:i:s');
+                
                 if(!empty($kol_sessions_data->end_date_time)){
-                    $ResposeData['status'] = 12;
+                    $ResposeData['status'] = 11;
                     $ResposeData['message'] = 'Session closed.';
                 }
                 else{
                     $start_date_time = strtotime($kol_sessions_data->start_date_time);
                     $currentTime = time();
-//                    $ResposeData['start_date_time'] = $start_date_time;
-//                    $ResposeData['currentTime'] = date('Y-m-d H:i:s');
-//                    $ResposeData['timediff'] = $start_date_time - $currentTime;
+                    
                     if($start_date_time > $currentTime - 600 && $start_date_time < $currentTime + 300){
                         $ResposeData['status'] = 1;
                         $ResposeData['message'] = 'Login Success!';
                     }
                     else{
-                        $ResposeData['status'] = 11;
-                        $ResposeData['message'] = 'Session is yet to start.';
+                        $ResposeData['status'] = 12;
+                        $ResposeData['message'] = 'Session start window has passed.';
                     }
                 }
                 
