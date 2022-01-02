@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\KoluserController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\KolSessionController;
 use App\Http\Controllers\QuestionController;
@@ -30,3 +30,4 @@ Route::get('/get-graph-data/{question}', [QuestionController::class, 'getGraphDa
 Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::class, 'export']);
 Route::get('/validate-session/{kol_session:unique_code}', [KolSessionController::class, 'validateSession']);
 Route::post('/attendee-login/{kol_session:unique_code}', [KolSessionController::class, 'loginAttendee']);
+Route::post('/login-kol', [KoluserController::class, 'login']);
