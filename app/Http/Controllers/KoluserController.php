@@ -85,34 +85,7 @@ class KoluserController extends Controller
             
             if(!empty($ResposeData)) return response($ResposeData, 200);
             
-//            $kol_sessions_data = DB::table('kol_sessions')
-////                    ->join('users', 'users.id', '=', 'kol_sessions.user_id')
-//                    ->where('unique_code', $request->unique_code)
-//                    ->first();
-            
-//            print_r($kol_sessions_data[0]);
-//            return response($kol_sessions_data[0], 200);    
-//            $kol_user_data = DB::table('users')
-//                    ->where('unique_code', $request->unique_code)
-//                    ->first();
-            print_r($kol_sessions_data);
-//            return response($kol_sessions_data, 200);   
-            die();
 
-//            DB::table('questions')->where('id', $request->question_id)
-//            ->update(['total_answered' => DB::raw('total_answered + '. 1)]);
-//
-//            DB::table('answers')->where('id', $request->answer_id)
-//            ->update(['count' => DB::raw('count + '. 1)]);
-//
-//            $feedback = Response::create([
-//                'attendee_id' => $request->attendee_id,
-//                'question_id' => $request->question_id,
-//                'answer_id' => $request->answer_id,
-//                'kol_session_id' => $request->kol_session_id
-//            ]);
-//
-//            if(!empty($feedback)) return response('Feedback Created', 200);;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response($e->getMessage(), 500);
