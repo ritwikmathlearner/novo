@@ -9,6 +9,7 @@ use App\Models\KolSession;
 use App\Models\Question;
 use App\Models\Response;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -77,7 +78,7 @@ class QuestionController extends Controller
 
     public function export(Attendee $attendee, KolSession $kolSession)
     {
-        $fileName = $attendee->name. '-' . $kolSession->session_name .'-Question.xlsx';
+        $fileName = $attendee->name. '-' . $kolSession->session_name . '-' . Carbon::parse($kolSession->start_date_time)->format('d-m-Y') .'-Question.xlsx';
 
         return Excel::download(new QuestionExport($attendee->id, $kolSession->id), $fileName);
     }
