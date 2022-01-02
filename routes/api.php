@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\KoluserController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
@@ -27,3 +27,5 @@ Route::get('/questions/{case}', [QuestionController::class, 'index']);
 Route::post('/save-response', [QuestionController::class, 'response']);
 Route::get('/get-graph-data/{question}', [QuestionController::class, 'getGraphData']);
 Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::class, 'export']);
+
+Route::post('/login-kol', [KoluserController::class, 'login']);
