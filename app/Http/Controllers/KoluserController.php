@@ -56,7 +56,7 @@ class KoluserController extends Controller
                             'users.email'
                             )
                     ->join('users', 'users.id', '=', 'kol_sessions.user_id')
-                    ->where('unique_code', '123456')    //$request->unique_code
+                    ->where('unique_code', $request->unique_code)    
                     ->first();
             
             if(empty($kol_sessions_data)){
