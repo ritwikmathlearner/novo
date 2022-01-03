@@ -66,4 +66,33 @@ class KolSessionController extends Controller
             return response($e->getMessage(), 500);
         }
     }
+    
+    
+    public function endSession(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'unique_code' => 'required|exists:kol_sessions,unique_code',
+            ]);
+
+            if ($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+
+            $kol_sessions_data = KolSession::where('unique_code', $request->unique_code)    
+                                   ->first();
+            if ($kol_sessions_data) {
+                $kol_sessions_data->session_ended_by = $kol_sessions_data->user_id;
+                $kol_sessions_data->end_date_time = new DateTime();
+                $kol_sessions_data->updated_at = new DateTime();
+
+                $kol_sessions_data->saveOrFail();
+
+                return response('Session is closed', 200);
+            }
+            
+            
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response($e->getMessage(), 500);
+        }
+    }
 }
