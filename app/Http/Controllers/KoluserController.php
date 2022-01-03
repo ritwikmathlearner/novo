@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\KolSession;
 use App\Models\User;
 
+use Carbon\Carbon;
+use DateTime;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +23,16 @@ class KoluserController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'unique_code' => 'required|exists:kol_sessions,unique_code'
+                'unique_code' => 'required|exists:kol_sessions,unique_code',
+                'login_for' => 'required'
             ]);
             
             if($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            
+            
+            if('KOL' != $request->login_for){
+                return response('Wrong user!', 400);
+            }
             
             /* 
              * 1    Success  
@@ -64,25 +73,31 @@ class KoluserController extends Controller
                 
                 if(!empty($kol_sessions_data->end_date_time)){
                     $ResposeData['status'] = 11;
-                    $ResposeData['message'] = 'Session closed.';
+                    $ResposeData['message'] = 'Session is closed.';
                 }
                 else{
-                    $start_date_time = strtotime($kol_sessions_data->start_date_time);
-                    $currentTime = time();
+//                    $start_date_time = strtotime($kol_sessions_data->start_date_time);
+                    $sessionStartDateTime = Carbon::createFromDate($kol_sessions_data->start_date_time);
+                    $currentDateTime = Carbon::createFromDate(now());
+                    $diffInMinutes = $sessionStartDateTime->diffInMinutes($currentDateTime);
+                    $ResposeData['data']['diffInMinutes'] = $diffInMinutes;
                     
-                    if($start_date_time > $currentTime - 600 && $start_date_time < $currentTime + 300){
-                        $ResposeData['status'] = 1;
-                        $ResposeData['message'] = 'Login Success!';
-                    }
-                    else{
+//                    if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15) return response('Session is not valid for login', 400);
+
+                    if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15){
                         $ResposeData['status'] = 12;
                         $ResposeData['message'] = 'Session start window has passed.';
+                        
+                    }
+                    else{
+                        $ResposeData['status'] = 1;
+                        $ResposeData['message'] = 'Login Success!';
                     }
                 }
                 
             }
             
-            if(!empty($ResposeData)) return response($ResposeData, 200);
+            if(!empty($ResposeData)) return response($ResposeData, (1 == $ResposeData['status'] ? 200 : 400));
             
 
         } catch (Exception $e) {
