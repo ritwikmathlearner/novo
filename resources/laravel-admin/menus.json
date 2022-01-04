@@ -1,0 +1,30 @@
+{
+  "menus": [
+    {
+      "section": "Resources",
+      "items": [
+        {
+          "title": "KOL Users",
+          "url": "/admin/kolusers"
+        },
+        {
+          "title": "Sessions",
+          "url": "/admin/Sessions"
+        }
+      ]
+    },
+    {
+      "section": "Admin",
+      "items": [
+        {
+          "title": "Generator",
+          "url": "/admin/generator"
+        },
+        {
+          "title": "Roles",
+          "url": "/admin/roles"
+        }
+      ]
+    }
+  ]
+}
