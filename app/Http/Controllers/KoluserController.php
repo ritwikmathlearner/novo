@@ -27,11 +27,11 @@ class KoluserController extends Controller
                 'login_for' => 'required'
             ]);
             
-            if($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
             
             
             if('KOL' != $request->login_for){
-                return response('Wrong user!', 400);
+                return sendFailResponse('Wrong user!');
             }
             
             /* 
@@ -86,7 +86,7 @@ class KoluserController extends Controller
 
                     if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15){
                         $ResposeData['status'] = 12;
-                        $ResposeData['message'] = 'Session start window has passed.';
+                        $ResposeData['message'] = 'Session is invalid.';
                         
                     }
                     else{
@@ -97,12 +97,17 @@ class KoluserController extends Controller
                 
             }
             
-            if(!empty($ResposeData)) return response($ResposeData, (1 == $ResposeData['status'] ? 200 : 400));
-            
+//            if(!empty($ResposeData)) return response($ResposeData, (1 == $ResposeData['status'] ? 200 : 400));
+            if(1 == $ResposeData['status']){
+                return sendSuccessResponse(null, $ResposeData);
+            }
+            else{
+                return sendFailResponse( $ResposeData);
+            }
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 }
