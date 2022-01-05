@@ -90,6 +90,9 @@ class KolSessionController extends Controller
 
                 return sendSuccessResponse('Session is closed');
             }
+            else{
+                return sendFailResponse('Invalid Session');
+            }
             
             
         } catch (Exception $e) {
