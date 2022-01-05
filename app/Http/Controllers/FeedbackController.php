@@ -24,7 +24,7 @@ class FeedbackController extends Controller
                 'feedback' => 'required|int|min:1|max:5'
             ]);
 
-            if($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
             $feedback = Feedback::create([
                 'kol_session_id' => $request->kol_session_id,
@@ -32,10 +32,10 @@ class FeedbackController extends Controller
                 'feedback' => $request->feedback
             ]);
 
-            if(!empty($feedback)) return response('Feedback stored', 200);
+            if(!empty($feedback)) return sendSuccessResponse("Feedback Stored");
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 

@@ -22,12 +22,12 @@ class KolSessionController extends Controller
             $sessionStartDateTime = Carbon::createFromDate($kolSession->start_date_time);
             $currentDateTime = Carbon::createFromDate(now());
             $diffInMinutes = $sessionStartDateTime->diffInMinutes($currentDateTime);
-            if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15) return response('Session is not valid for login', 400);
+            if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15) return sendFailResponse('Session is not valid for login');
 
-            return response('Session is valid', 200);
+            return sendSuccessResponse('Session is valid');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 
@@ -60,10 +60,12 @@ class KolSessionController extends Controller
                 ]
             );
 
-            if ($attendee) return response($attendee, 200);
+            $attendee->room_name = $kolSession->unique_code;
+
+            if ($attendee) return sendSuccessResponse(null, $attendee);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
     

@@ -24,10 +24,10 @@ class QuestionController extends Controller
     {
         try {
             $questions = QuestionResource::collection(Question::where('patient_case', $case)->get());
-            return response($questions, 200);
+            return sendSuccessResponse(null, $questions);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ class QuestionController extends Controller
                 'kol_session_id' => 'required|exists:kol_sessions,id'
             ]);
 
-            if($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
             DB::table('questions')->where('id', $request->question_id)
             ->update(['total_answered' => DB::raw('total_answered + '. 1)]);
@@ -56,10 +56,10 @@ class QuestionController extends Controller
                 'kol_session_id' => $request->kol_session_id
             ]);
 
-            if(!empty($feedback)) return response('Feedback Created', 200);;
+            if(!empty($feedback)) return sendSuccessResponse('Feedback Created');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 
@@ -69,10 +69,10 @@ class QuestionController extends Controller
             $data['question'] = $question;
             $data['answers'] = $question->answers()->get();
 
-            return response($data, 200);            
+            return sendSuccessResponse(null, $data);            
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 
