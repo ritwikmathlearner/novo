@@ -77,7 +77,7 @@ class KolSessionController extends Controller
                 'unique_code' => 'required|exists:kol_sessions,unique_code',
             ]);
 
-            if ($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            if ($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
             $kol_sessions_data = KolSession::where('unique_code', $request->unique_code)    
                                    ->first();
@@ -88,13 +88,13 @@ class KolSessionController extends Controller
 
                 $kol_sessions_data->saveOrFail();
 
-                return response('Session is closed', 200);
+                return sendSuccessResponse('Session is closed');
             }
             
             
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response($e->getMessage(), 500);
+            return sendFailResponse($e->getMessage());
         }
     }
 }
