@@ -39,7 +39,7 @@ class KolSessionController extends Controller
                 'phone' => 'required|string|min:10|max:10'
             ]);
 
-            if ($validator->fails()) return response(Arr::flatten($validator->errors()->messages()), 400);
+            if ($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
             $attendee = Attendee::where('phone', $request->phone)->first();
 
