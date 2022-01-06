@@ -17,3 +17,5 @@ yarn-error.log
 nbproject/project.properties
 *.lnk
 nbproject/project.xml
+*.bak
+

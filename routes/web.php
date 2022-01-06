@@ -22,6 +22,9 @@ Route::resource('admin/roles', 'App\Http\Controllers\Admin\RolesController');
 Route::resource('admin/permissions', 'App\Http\Controllers\Admin\PermissionsController');
 //Route::resource('admin/users', 'App\Http\Controllers\Admin\UsersController');
 Route::resource('admin/kolusers', 'App\Http\Controllers\Admin\KolUsersController');
+
+Route::resource('admin/session', 'App\Http\Controllers\Admin\SessionController');
+
 Route::resource('admin/pages', 'App\Http\Controllers\Admin\PagesController');
 Route::resource('admin/activitylogs', 'App\Http\Controllers\Admin\ActivityLogsController')->only([
     'index', 'show', 'destroy'
@@ -29,3 +32,11 @@ Route::resource('admin/activitylogs', 'App\Http\Controllers\Admin\ActivityLogsCo
 Route::resource('admin/settings', 'App\Http\Controllers\Admin\SettingsController');
 Route::get('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator']);
 Route::post('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('admin/login', 'App\Http\Controllers\Admin\AdminController@login');
+Route::post('admin/loginverify', 'App\Http\Controllers\Admin\AdminController@loginverify');
+Route::post('admin/logout', 'App\Http\Controllers\Admin\AdminController@logout');
