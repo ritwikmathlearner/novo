@@ -9,17 +9,13 @@
         },
         {
           "title": "Sessions",
-          "url": "/admin/Sessions"
+          "url": "/admin/session"
         }
       ]
     },
     {
       "section": "Admin",
       "items": [
-        {
-          "title": "Generator",
-          "url": "/admin/generator"
-        },
         {
           "title": "Roles",
           "url": "/admin/roles"

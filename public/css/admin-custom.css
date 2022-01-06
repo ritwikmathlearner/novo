@@ -1,0 +1,32 @@
+/* 
+    Created on : 6 Jan, 2022, 8:22:34 AM
+    Author     : mukul
+*/
+
+.field-wrap label {
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: block;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.field-wrap input {
+    display: block;
+    width: 100%;
+    background: #0e0928;
+    border: none;
+    height: 50px;
+    padding: 0 15px;
+    position: relative;
+    z-index: 3;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.field-wrap {
+    margin-bottom: 35px;
+}

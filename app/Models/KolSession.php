@@ -13,6 +13,11 @@ class KolSession extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }   
+    
+    public function qrimage()
+    {
+        return $this->hasOne(Qrimage::class);
+    } 
 }
