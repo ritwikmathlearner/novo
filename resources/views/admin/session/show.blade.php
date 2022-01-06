@@ -12,18 +12,31 @@
 
                         <a href="{{ url('/admin/session') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <!--<a href="{{ url('/admin/session/' . $session->id . '/edit') }}" title="Edit Session"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>-->
-<!--                        {!! Form::open([
-                            'method' => 'DELETE',
+                        @php
+                            if(empty($session->end_date_time)){
+                        @endphp
+                        {!! Form::open([
+                            'method' => 'PATCH',
                             'url' => ['/admin/session', $session->id],
                             'style' => 'display:inline'
                         ]) !!}
-                            {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i> Delete', array(
+                            {!! Form::hidden('end_date_time', 'END', ['class' => 'form-control', 'required' => 'required' , 'id' => 'end_date_time']) !!}
+                            {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i> Close Session', array(
                                     'type' => 'submit',
                                     'class' => 'btn btn-danger btn-sm',
-                                    'title' => 'Delete Session',
-                                    'onclick'=>'return confirm("Confirm delete?")'
+                                    'title' => 'Close Session',
+                                    'onclick'=>'return confirm("Confirm Close?")'
                             ))!!}
-                        {!! Form::close() !!}-->
+                        {!! Form::close() !!}
+                        @php
+                            }
+                            else{
+                                $end_date_time_readable = date('d-m-Y h:i:s A' , strtotime($session->end_date_time));
+                        @endphp
+                        <button class="btn btn-danger btn-lg">This session is already closed @ {{ $end_date_time_readable }}</button>
+                        @php
+                            }
+                        @endphp
                         <br/>
                         <br/>
 

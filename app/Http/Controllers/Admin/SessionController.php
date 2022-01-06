@@ -11,6 +11,7 @@ use DB;
 use Carbon\Carbon;
 use DateTime;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Auth;
 
 class SessionController extends Controller
 {
@@ -135,6 +136,20 @@ class SessionController extends Controller
     }
 
     /**
+     * Close session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+//    public function closeSession()
+//    {
+//        //
+//        dd('hest');
+//    }
+    
+    
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -143,7 +158,21 @@ class SessionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!Auth::check() || !Auth::user()->hasRole('ADMIN')) return redirect('admin/login');
         //
+        $updateData = [];
+        $data = $request->all();
+        if(!empty($data['end_date_time']) && "END" == $data['end_date_time']){
+            $session = KolSession::findOrFail($id);
+            $updateData = array(
+                'end_date_time' => Carbon::createFromDate(now()),
+                'session_ended_by' => Auth::user()->id,
+            );
+            $session->update($updateData);
+            return redirect('admin/session')->with('flash_message', 'Session closed!');
+        }
+        
+        return redirect('admin/session')->with('flash_message', 'Action was not performed!');
     }
 
     /**
