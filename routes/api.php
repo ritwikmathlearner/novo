@@ -31,4 +31,4 @@ Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::cla
 Route::get('/validate-session/{kol_session:unique_code}', [KolSessionController::class, 'validateSession']);
 Route::post('/attendee-login/{kol_session:unique_code}', [KolSessionController::class, 'loginAttendee']);
 Route::post('/login-kol', [KoluserController::class, 'login']);
-Route::post('/end-session/', [KolSessionController::class, 'endSession']);
+Route::post('/end-session', [KolSessionController::class, 'endSession']);

@@ -7,7 +7,7 @@ use App\Models\User;
 
 use Carbon\Carbon;
 use DateTime;
-
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
