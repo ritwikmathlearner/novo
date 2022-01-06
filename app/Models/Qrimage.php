@@ -9,11 +9,5 @@ class Qrimage extends Model
 {
     use HasFactory;
 
-    
     protected $guarded = [];
-
-//    public function GetKolSession()
-//    {
-//        return $this->belongsTo(KolSession::class);
-//    }   
 }

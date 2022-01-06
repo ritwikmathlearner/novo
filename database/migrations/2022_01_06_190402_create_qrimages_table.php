@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQrcodesTable extends Migration
+class CreateQrimagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateQrcodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('qrcodes', function (Blueprint $table) {
+        Schema::create('qrimages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('kol_session_id');
             $table->string('qr_code_image');
@@ -31,6 +31,6 @@ class CreateQrcodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('qrcodes');
+        Schema::dropIfExists('qrimages');
     }
 }
