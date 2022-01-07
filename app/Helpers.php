@@ -18,7 +18,8 @@ function sendFailResponse($data, $status_code = 500)
 {
     $response = [
         "status" => 0,
-        "error" => $data
+//        "error" => $data
+        "data" => $data
     ];
     return response($response, $status_code)->header('Content-Type', 'application/json');
 }
