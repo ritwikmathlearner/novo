@@ -61,6 +61,7 @@ class KolSessionController extends Controller
             );
 
             $attendee->room_name = $kolSession->unique_code;
+            $attendee->kol_session_id = $kolSession->id;
 
             if ($attendee) return sendSuccessResponse(null, $attendee);
         } catch (Exception $e) {
