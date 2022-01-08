@@ -29,6 +29,7 @@ Route::post('/save-response', [QuestionController::class, 'response']);
 Route::get('/get-graph-data/{question}', [QuestionController::class, 'getGraphData']);
 Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::class, 'export']);
 Route::get('/validate-session/{kol_session:unique_code}', [KolSessionController::class, 'validateSession']);
+Route::get('/issessionopen/{kol_session:unique_code}', [KolSessionController::class, 'isSessionOpen']);
 Route::post('/attendee-login/{kol_session:unique_code}', [KolSessionController::class, 'loginAttendee']);
 Route::post('/login-kol', [KoluserController::class, 'login']);
 Route::post('/end-session', [KolSessionController::class, 'endSession']);

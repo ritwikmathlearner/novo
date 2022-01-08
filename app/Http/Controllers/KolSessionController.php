@@ -31,6 +31,25 @@ class KolSessionController extends Controller
         }
     }
 
+    public function isSessionOpen(KolSession $kolSession)
+    {
+        try {
+            // dd(date("Y-m-d H:i:s", strtotime('+10 minutes')));
+            
+            if(!empty($kolSession->end_date_time)){
+                $end_date_time_readable = date('d-m-Y h:i:s A' , strtotime($kolSession->end_date_time));
+                return sendFailResponse("This session is already closed  @ $end_date_time_readable");
+            }
+            else{
+                return sendSuccessResponse('Session has not ended yet.');
+            }
+            
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return sendFailResponse($e->getMessage());
+        }
+    }
+
     public function loginAttendee(Request $request, KolSession $kolSession)
     {
         try {
