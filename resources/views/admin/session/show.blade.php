@@ -47,7 +47,14 @@
                             </div>
                             <div>
                                 <h4><span style="padding-right: 50px;">Unique Code:</span>
-                                {{$session->unique_code}}</h4>
+                                    <span style="color: #DD3333;">{{$session->unique_code}}</span></h4>
+                            </div>
+                            <div>
+                            @php
+                                $start_date_time_readable = date('d-m-Y h:i A' , strtotime($session->start_date_time));
+                            @endphp
+                                <h4><span style="padding-right: 50px;">Start time:</span>
+                                <span style="color: #007bff;">{{$start_date_time_readable}}</span></h4>
                             </div>
                             <div>
                                 <h4><span style="padding-right: 50px;">Kol Name:</span>
