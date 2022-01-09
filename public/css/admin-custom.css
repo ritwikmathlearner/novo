@@ -30,3 +30,7 @@
 .field-wrap {
     margin-bottom: 35px;
 }
+
+.pagination svg{
+    height: 30px !important;
+}
