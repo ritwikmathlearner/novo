@@ -75,7 +75,11 @@ class QuestionController extends Controller
             )->first()->count;
             $data['question'] = $question;
             $data['answers'] = DB::table('answers')
-            ->leftJoin('answer_sessions', 'answers.id', 'answer_sessions.answer_id')
+            ->where('answers.question_id', $question->id)
+            ->leftJoin('answer_sessions', function($join) use ($kolSession) {
+                $join->on('answers.id', 'answer_sessions.answer_id')
+                ->where('answer_sessions.kol_session_id', $kolSession->id);
+            })
             ->select('answers.id', 'answers.answer', DB::raw('IFNULL(`answer_sessions`.`count`, 0) AS count'))
             ->get();
 
