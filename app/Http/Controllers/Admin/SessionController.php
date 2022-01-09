@@ -87,7 +87,7 @@ class SessionController extends Controller
         $qr_code_image_name = "$unique_code.svg";
         $QrcodesData['qr_code_image'] = $qr_code_image_name;
         
-        $joining_url = url('api/attendee-login/'. $unique_code);
+        $joining_url = 'http://167.172.130.85?session_id='. $unique_code;
         $QrcodesData['joining_url'] = $joining_url;
 
         $QrcodesData['created_at'] = Carbon::createFromDate(now());
