@@ -43,11 +43,15 @@ class QuestionController extends Controller
 
             if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
-            DB::table('questions')->where('id', $request->question_id)
-            ->update(['total_answered' => DB::raw('total_answered + '. 1)]);
+            DB::table('question_sessions')->updateOrInsert(
+                ['question_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
+                ['count' => DB::raw('count + '. 1)]
+            );
 
-            DB::table('answers')->where('id', $request->answer_id)
-            ->update(['count' => DB::raw('count + '. 1)]);
+            DB::table('answer_sessions')->updateOrInsert(
+                ['answer_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
+                ['count' => DB::raw('count + '. 1)]
+            );
 
             $feedback = Response::create([
                 'attendee_id' => $request->attendee_id,
@@ -63,11 +67,17 @@ class QuestionController extends Controller
         }
     }
 
-    public function getGraphData(Question $question)
+    public function getGraphData(Question $question, KolSession $kolSession)
     {
         try {
+            $question->total_answered = DB::table('question_sessions')->where(
+                ['question_id' => $question->id, 'kol_session_id' => $kolSession->id],
+            )->first()->count;
             $data['question'] = $question;
-            $data['answers'] = $question->answers()->get();
+            $data['answers'] = DB::table('answers')
+            ->leftJoin('answer_sessions', 'answers.id', 'answer_sessions.answer_id')
+            ->select('answers.id', 'answers.answer', DB::raw('IFNULL(`answer_sessions`.`count`, 0) AS count'))
+            ->get();
 
             return sendSuccessResponse(null, $data);            
         } catch (Exception $e) {
