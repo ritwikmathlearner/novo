@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Mail;
 class SessionController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -161,11 +165,16 @@ class SessionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-//    public function closeSession()
-//    {
-//        //
-//        dd('hest');
-//    }
+    public function endtime($id)
+    {
+        //
+        $session = KolSession::findOrFail($id);
+        
+        
+        return view('admin.session.endtime', compact('session'));
+
+        dd($id);
+    }
     
     
     /**
@@ -181,10 +190,19 @@ class SessionController extends Controller
         //
         $updateData = [];
         $data = $request->all();
-        if(!empty($data['end_date_time']) && "END" == $data['end_date_time']){
+        if(!empty($data['end_date_time_now']) && "END" == $data['end_date_time_now']){
             $session = KolSession::findOrFail($id);
             $updateData = array(
                 'end_date_time' => Carbon::createFromDate(now()),
+                'session_ended_by' => Auth::user()->id,
+            );
+            $session->update($updateData);
+            return redirect('admin/session')->with('flash_message', 'Session closed!');
+        }
+        if(!empty($data['end_date_time_manual']) && "END_MANUAL" == $data['end_date_time_manual']){
+            $session = KolSession::findOrFail($id);
+            $updateData = array(
+                'end_date_time' => Carbon::createFromDate($data['end_date_time']),
                 'session_ended_by' => Auth::user()->id,
             );
             $session->update($updateData);

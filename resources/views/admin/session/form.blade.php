@@ -12,7 +12,6 @@
     {!! Form::text('start_date_time', null, ['class' => 'form-control', 'required' => 'required' , 'id' => 'start_date_time']) !!}
     {!! $errors->first('start_date_time', '<p class="help-block">:message</p>') !!}
 </div>
-<div id="datetimepicker12"></div>
 
 <!--<div class="form-group{{ $errors->has('email') ? ' has-error' : ''}}">
     {!! Form::label('email', 'Email: ', ['class' => 'control-label']) !!}
