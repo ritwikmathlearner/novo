@@ -100,21 +100,25 @@ class SessionController extends Controller
         
 //                dd($QrcodesData);
 
-        $kol_user = User::findOrFail($request->user_id);
-        
-        $start_date_time_readable = date('d-m-Y h:i A' , strtotime($session->start_date_time));
-        $emailData = [
-            'subject' => 'Novo Session Is Created',
-            'email' => $kol_user->email,
-            'name' =>$kol_user->name,
-            'session_name' =>$session->session_name,
-            'unique_code' =>$session->unique_code,
-            'start_date_time_readable' =>$start_date_time_readable,
-          ];
-        Mail::send('new_session_email', $emailData, function($message) use ($emailData) {
-            $message->to($emailData['email'])
-            ->subject($emailData['subject']);
-        });
+        if(0){
+            $kol_user = User::findOrFail($request->user_id);
+
+            $start_date_time_readable = date('d-m-Y h:i A' , strtotime($session->start_date_time));
+            $emailData = [
+                'subject' => 'Novo Session Is Created',
+                'email' => $kol_user->email,
+                'name' =>$kol_user->name,
+                'session_name' =>$session->session_name,
+                'unique_code' =>$session->unique_code,
+                'start_date_time_readable' =>$start_date_time_readable,
+              ];
+
+            Mail::send('new_session_email', $emailData, function($message) use ($emailData) {
+                $message->to($emailData['email'])
+                ->subject($emailData['subject']);
+            });
+        }
+
 
         return redirect('admin/session')->with('flash_message', 'Session added!');
     }
