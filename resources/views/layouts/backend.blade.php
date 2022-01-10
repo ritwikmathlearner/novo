@@ -106,7 +106,7 @@
     </script>
     <script type="text/javascript">
         $(function () {
-            $('#start_date_time').datetimepicker({
+            $('#start_date_time , #end_date_time').datetimepicker({
                 inline: true,
                 sideBySide: true
             });

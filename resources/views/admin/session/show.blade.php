@@ -12,6 +12,7 @@
 
                         <a href="{{ url('/admin/session') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <!--<a href="{{ url('/admin/session/' . $session->id . '/edit') }}" title="Edit Session"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>-->
+                        <a href="{{ url('/admin/session/endtime/' . $session->id . '/') }}" title="Set End Date & Time"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Set End Date & Time</button></a>
                         @php
                             if(empty($session->end_date_time)){
                         @endphp
@@ -20,7 +21,7 @@
                             'url' => ['/admin/session', $session->id],
                             'style' => 'display:inline'
                         ]) !!}
-                            {!! Form::hidden('end_date_time', 'END', ['class' => 'form-control', 'required' => 'required' , 'id' => 'end_date_time']) !!}
+                            {!! Form::hidden('end_date_time_now', 'END', ['class' => 'form-control', 'required' => 'required' , 'id' => 'end_date_time_now']) !!}
                             {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i> Close Session', array(
                                     'type' => 'submit',
                                     'class' => 'btn btn-danger btn-sm',
@@ -33,7 +34,7 @@
                             else{
                                 $end_date_time_readable = date('d-m-Y h:i:s A' , strtotime($session->end_date_time));
                         @endphp
-                        <button class="btn btn-danger btn-lg">This session is already closed @ {{ $end_date_time_readable }}</button>
+                        <br><br><button class="btn btn-danger btn-lg">End Date & Time is set @ {{ $end_date_time_readable }}</button>
                         @php
                             }
                         @endphp

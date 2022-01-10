@@ -23,6 +23,7 @@ Route::resource('admin/permissions', 'App\Http\Controllers\Admin\PermissionsCont
 //Route::resource('admin/users', 'App\Http\Controllers\Admin\UsersController');
 Route::resource('admin/kolusers', 'App\Http\Controllers\Admin\KolUsersController');
 
+Route::get('admin/session/endtime/{id}', 'App\Http\Controllers\Admin\SessionController@endtime');
 Route::resource('admin/session', 'App\Http\Controllers\Admin\SessionController');
 
 Route::resource('admin/pages', 'App\Http\Controllers\Admin\PagesController');
