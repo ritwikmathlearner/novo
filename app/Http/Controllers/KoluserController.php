@@ -43,7 +43,7 @@ class KoluserController extends Controller
             $ResposeData = [
                     'status' => 0,
                     'message' => '',
-                    'data' => []
+//                    'data' => []
                 ]; 
                     
             $kol_sessions_data = KolSession
@@ -68,8 +68,8 @@ class KoluserController extends Controller
             }
             else{
                 unset($kol_sessions_data->session_ended_by);
-                $ResposeData['data'] = json_decode(json_encode($kol_sessions_data), true);
-                $ResposeData['data']['currentTime'] = date('Y-m-d H:i:s');
+                $ResposeData = array_merge($ResposeData,json_decode(json_encode($kol_sessions_data), true));
+                $ResposeData['currentTime'] = date('Y-m-d H:i:s');
                 
                 if(!empty($kol_sessions_data->end_date_time)){
                     $ResposeData['status'] = 11;
@@ -80,7 +80,7 @@ class KoluserController extends Controller
                     $sessionStartDateTime = Carbon::createFromDate($kol_sessions_data->start_date_time);
                     $currentDateTime = Carbon::createFromDate(now());
                     $diffInMinutes = $sessionStartDateTime->diffInMinutes($currentDateTime);
-                    $ResposeData['data']['diffInMinutes'] = $diffInMinutes;
+                    $ResposeData['diffInMinutes'] = $diffInMinutes;
                     
 //                    if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15) return response('Session is not valid for login', 400);
 
@@ -96,6 +96,8 @@ class KoluserController extends Controller
                 }
                 
             }
+            
+            
             
 //            if(!empty($ResposeData)) return response($ResposeData, (1 == $ResposeData['status'] ? 200 : 400));
             if(1 == $ResposeData['status']){
