@@ -53,11 +53,13 @@ class QuestionController extends Controller
                 ['count' => DB::raw('count + '. 1)]
             );
 
-            $feedback = Response::create([
+            $feedback = Response::updateOrCreate([
                 'attendee_id' => $request->attendee_id,
                 'question_id' => $request->question_id,
-                'answer_id' => $request->answer_id,
                 'kol_session_id' => $request->kol_session_id
+            ], 
+            [
+                'answer_id' => $request->answer_id
             ]);
 
             if(!empty($feedback)) return sendSuccessResponse('Feedback Created');

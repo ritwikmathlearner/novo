@@ -26,6 +26,10 @@ class FeedbackController extends Controller
 
             if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
+            $kolSession = KolSession::find($request->kol_session_id);
+
+            if(empty($kolSession->end_date_time)) return sendFailResponse('Session is still active'); 
+
             $feedback = Feedback::create([
                 'kol_session_id' => $request->kol_session_id,
                 'attendee_id' => $request->attendee_id,

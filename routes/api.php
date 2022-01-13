@@ -3,6 +3,7 @@ use App\Http\Controllers\KoluserController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\KolSessionController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Middleware\EnsureSessionIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,8 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/feedbacks', [FeedbackController::class, 'save']);
 Route::get('/export-feedback/{kol_session}', [FeedbackController::class, 'export']);
 
+Route::middleware([EnsureSessionIsValid::class])->group(function() {
+    Route::post('/save-response', [QuestionController::class, 'response']);
+});
+
 Route::get('/questions/{case}', [QuestionController::class, 'index']);
-Route::post('/save-response', [QuestionController::class, 'response']);
 Route::get('/get-graph-data/{question}/{kol_session}', [QuestionController::class, 'getGraphData']);
 Route::get('/export-question/{attendee}/{kol_session}', [QuestionController::class, 'export']);
 Route::get('/validate-session/{kol_session:unique_code}', [KolSessionController::class, 'validateSession']);
