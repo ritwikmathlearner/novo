@@ -22,7 +22,8 @@ class KolSessionController extends Controller
             $sessionStartDateTime = Carbon::createFromDate($kolSession->start_date_time);
             $currentDateTime = Carbon::createFromDate(now());
             $diffInMinutes = $sessionStartDateTime->diffInMinutes($currentDateTime);
-            if (($sessionStartDateTime->isPast() && $diffInMinutes > 5) || $diffInMinutes > 15) return sendFailResponse('Session is not valid for login');
+
+            if ((!$sessionStartDateTime->isPast() && $diffInMinutes > 15) || isset($kolSession->end_date_time)) return sendFailResponse('Session is not valid for login');
 
             return sendSuccessResponse('Session is valid');
         } catch (Exception $e) {
