@@ -30,7 +30,7 @@ class SessionController extends Controller
     {
         //
         $keyword = $request->get('search');
-        $perPage = 15;
+        $perPage = 10;
 
         if (!empty($keyword)) {
             $session = KolSession::where('session_name', 'LIKE', "%$keyword%")->orWhere('unique_code', 'LIKE', "%$keyword%")

@@ -44,6 +44,13 @@
                                         <td>{{ $item->unique_code }}</td>
                                         <td>
                                             <a href="{{ url('/admin/session/' . $item->id) }}" title="View Session"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+                                            @php
+                                                if(!empty($item->end_date_time)){
+                                            @endphp
+                                            <a href="{{ url('api/export-feedback/' . $item->id) }}" title="View Session"><button class="btn btn-xlsx btn-sm">Feedback <i class="fa fa-file-excel-o" aria-hidden="true"></i></button></a>
+                                            @php
+                                                }
+                                            @endphp
                                             <!--<a href="{{ url('/admin/session/' . $item->id . '/edit') }}" title="Edit Session"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>-->
 <!--                                            {!! Form::open([
                                                 'method' => 'DELETE',

@@ -34,3 +34,15 @@
 .pagination svg{
     height: 30px !important;
 }
+
+
+.btn-xlsx {
+    color: #fff;
+    background-color: #217346;
+    border-color: #217346;
+}
+.btn-xlsx:hover {
+    color: #fff;
+    background-color: rgb(33 115 70 / 75%);;
+    border-color: #217346;
+}
