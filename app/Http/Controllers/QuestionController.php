@@ -40,7 +40,7 @@ class QuestionController extends Controller
                 'question_id' => 'required|exists:questions,id',
                 'answer_id' => 'required|exists:answers,id',
                 'kol_session_id' => 'required|exists:kol_sessions,id',
-                'replay' => 'boolean'
+                'replay' => 'string|in:true,false'
             ]);
 
             if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
