@@ -43,20 +43,33 @@ class QuestionController extends Controller
                 'replay' => 'string|in:true,false'
             ]);
 
-            if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
+            $response = null;
 
-            $feedback = Response::where([
+            if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
+            
+            $response = Response::where([
                 'attendee_id' => $request->attendee_id,
                 'question_id' => $request->question_id,
                 'kol_session_id' => $request->kol_session_id
             ])->first();
-            
-            if(isset($request->replay) && $request->replay) {
+
+            if(!empty($response)) {
                 DB::table('answer_sessions')->updateOrInsert(
-                    ['answer_id' => $feedback->answer_id, 'kol_session_id' => $request->kol_session_id],
+                    ['answer_id' => $response->answer_id, 'kol_session_id' => $request->kol_session_id],
                     ['count' => DB::raw('count - '. 1)]
-                );   
+                );  
+                
+                $response->answer_id = $request->answer_id;
+                $response->save();
             } else {
+                $response = Response::updateOrCreate([
+                    'attendee_id' => $request->attendee_id,
+                    'question_id' => $request->question_id,
+                    'kol_session_id' => $request->kol_session_id
+                ],[
+                    'answer_id' => $request->answer_id 
+                ]);
+
                 DB::table('question_sessions')->updateOrInsert(
                     ['question_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
                     ['count' => DB::raw('count + '. 1)]
@@ -68,10 +81,7 @@ class QuestionController extends Controller
                 ['count' => DB::raw('count + '. 1)]
             );
 
-            $feedback->answer_id = $request->answer_id;
-            $feedback->save();
-
-            if(!empty($feedback)) return sendSuccessResponse('Feedback Created');
+            if(!empty($response)) return sendSuccessResponse('Feedback Created');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return sendFailResponse($e->getMessage());
@@ -83,7 +93,10 @@ class QuestionController extends Controller
         try {
             $question->total_answered = DB::table('question_sessions')->where(
                 ['question_id' => $question->id, 'kol_session_id' => $kolSession->id],
-            )->first()->count;
+            )->first()?->count ?? 0;
+
+            // if(empty($question->total_answered)) return sendFailResponse("No one answered");
+
             $data['question'] = $question;
             $data['answers'] = DB::table('answers')
             ->where('answers.question_id', $question->id)
