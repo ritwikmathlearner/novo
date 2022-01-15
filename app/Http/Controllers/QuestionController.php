@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\QuestionExport;
 use App\Http\Resources\QuestionResource;
+use App\Models\Answer;
 use App\Models\Attendee;
 use App\Models\KolSession;
 use App\Models\Question;
@@ -38,29 +39,37 @@ class QuestionController extends Controller
                 'attendee_id' => 'required|exists:attendees,id',
                 'question_id' => 'required|exists:questions,id',
                 'answer_id' => 'required|exists:answers,id',
-                'kol_session_id' => 'required|exists:kol_sessions,id'
+                'kol_session_id' => 'required|exists:kol_sessions,id',
+                'replay' => 'boolean'
             ]);
 
             if($validator->fails()) return sendFailResponse(Arr::flatten($validator->errors()->messages()));
 
-            DB::table('question_sessions')->updateOrInsert(
-                ['question_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
-                ['count' => DB::raw('count + '. 1)]
-            );
+            $feedback = Response::where([
+                'attendee_id' => $request->attendee_id,
+                'question_id' => $request->question_id,
+                'kol_session_id' => $request->kol_session_id
+            ])->first();
+            
+            if(isset($request->replay) && $request->replay) {
+                DB::table('answer_sessions')->updateOrInsert(
+                    ['answer_id' => $feedback->answer_id, 'kol_session_id' => $request->kol_session_id],
+                    ['count' => DB::raw('count - '. 1)]
+                );   
+            } else {
+                DB::table('question_sessions')->updateOrInsert(
+                    ['question_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
+                    ['count' => DB::raw('count + '. 1)]
+                );
+            }
 
             DB::table('answer_sessions')->updateOrInsert(
                 ['answer_id' => $request->answer_id, 'kol_session_id' => $request->kol_session_id],
                 ['count' => DB::raw('count + '. 1)]
             );
 
-            $feedback = Response::updateOrCreate([
-                'attendee_id' => $request->attendee_id,
-                'question_id' => $request->question_id,
-                'kol_session_id' => $request->kol_session_id
-            ], 
-            [
-                'answer_id' => $request->answer_id
-            ]);
+            $feedback->answer_id = $request->answer_id;
+            $feedback->save();
 
             if(!empty($feedback)) return sendSuccessResponse('Feedback Created');
         } catch (Exception $e) {
