@@ -71,8 +71,13 @@
                                 <img  class="col-md-9" src="{{url( !empty($qrimage->qr_code_image) ? '/qrimages/'.$qrimage->qr_code_image: '')}}" alt="{{ $session->unique_code }}" />
                             </div>
                             <div class="col-md-6 float-right">
-                                <h5>Url:</h5>
+                                <h5>iOS Url:</h5>
                                 <div class="btn-secondary">{{url($qrimage->joining_url)}}</div>
+                            </div>
+                            
+                            <div class="col-md-6 float-right">
+                                <h5>Android Url:</h5>
+                                <div class="btn-dark">http://hafizg.antug.com/NovoV1.apk</div>
                             </div>
                             
                         </div>
