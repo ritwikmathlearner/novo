@@ -49,7 +49,7 @@ class QuestionController extends Controller
             );
 
             DB::table('answer_sessions')->updateOrInsert(
-                ['answer_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
+                ['answer_id' => $request->answer_id, 'kol_session_id' => $request->kol_session_id],
                 ['count' => DB::raw('count + '. 1)]
             );
 
