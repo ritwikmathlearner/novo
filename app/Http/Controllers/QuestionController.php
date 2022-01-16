@@ -91,11 +91,15 @@ class QuestionController extends Controller
     public function getGraphData(Question $question, KolSession $kolSession)
     {
         try {
-            $question->total_answered = DB::table('question_sessions')->where(
+            $question_session = DB::table('question_sessions')->where(
                 ['question_id' => $question->id, 'kol_session_id' => $kolSession->id],
-            )->first()?->count ?? 0;
+            )->first();
 
-            // if(empty($question->total_answered)) return sendFailResponse("No one answered");
+            if(empty($question_session)) {
+                $question->total_answered = 0;
+            } else {
+                $question->total_answered = $question_session->count;
+            }
 
             $data['question'] = $question;
             $data['answers'] = DB::table('answers')
