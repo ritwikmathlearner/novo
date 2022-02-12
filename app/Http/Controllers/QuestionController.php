@@ -38,7 +38,7 @@ class QuestionController extends Controller
             $validator = Validator::make($request->all(), [
                 'attendee_id' => 'required|exists:attendees,id',
                 'question_id' => 'required|exists:questions,id',
-                'answer_id' => 'required|exists:answers,id',
+                'answer_id.*' => 'required|exists:answers,id',
                 'kol_session_id' => 'required|exists:kol_sessions,id',
                 'replay' => 'string|in:true,false'
             ]);
@@ -51,35 +51,59 @@ class QuestionController extends Controller
                 'attendee_id' => $request->attendee_id,
                 'question_id' => $request->question_id,
                 'kol_session_id' => $request->kol_session_id
-            ])->first();
+            ])->pluck('answer_id')->toArray();
 
             if(!empty($response)) {
                 DB::table('answer_sessions')->updateOrInsert(
                     ['answer_id' => $response->answer_id, 'kol_session_id' => $request->kol_session_id],
                     ['count' => DB::raw('count - '. 1)]
-                );  
+                );
                 
-                $response->answer_id = $request->answer_id;
-                $response->save();
+                $remove = array_diff($response, $request->answer_id);
+                $add = array_diff($request->answer_id, $response);
+                
+                foreach($remove as $data) {
+                    Response::where([
+                        'attendee_id' => $request->attendee_id,
+                        'question_id' => $request->question_id,
+                        'kol_session_id' => $request->kol_session_id,
+                        'answer_id' => $data
+                    ])->delete();
+                }
+                
+                
+                foreach($add as $data) {
+                    Response::create([
+                        'attendee_id' => $request->attendee_id,
+                        'question_id' => $request->question_id,
+                        'kol_session_id' => $request->kol_session_id,
+                        'answer_id' => $data
+                    ]);
+                }
             } else {
-                $response = Response::updateOrCreate([
-                    'attendee_id' => $request->attendee_id,
-                    'question_id' => $request->question_id,
-                    'kol_session_id' => $request->kol_session_id
-                ],[
-                    'answer_id' => $request->answer_id 
-                ]);
+               $response = null;
+               foreach($request->answer_id as $data) {
+                     $response = Response::updateOrCreate([
+                        'attendee_id' => $request->attendee_id,
+                        'question_id' => $request->question_id,
+                        'kol_session_id' => $request->kol_session_id
+                    ],[
+                        'answer_id' => $data 
+                    ]);   
+               }
 
                 DB::table('question_sessions')->updateOrInsert(
                     ['question_id' => $request->question_id, 'kol_session_id' => $request->kol_session_id],
                     ['count' => DB::raw('count + '. 1)]
                 );
             }
-
-            DB::table('answer_sessions')->updateOrInsert(
-                ['answer_id' => $request->answer_id, 'kol_session_id' => $request->kol_session_id],
-                ['count' => DB::raw('count + '. 1)]
-            );
+            
+            foreach($request->answer_id as $data) {
+                 DB::table('answer_sessions')->updateOrInsert(
+                    ['answer_id' => $data, 'kol_session_id' => $request->kol_session_id],
+                    ['count' => DB::raw('count + '. 1)]
+                );      
+            };
 
             if(!empty($response)) return sendSuccessResponse('Feedback Created');
         } catch (Exception $e) {
